@@ -6,7 +6,7 @@ iOS / Andriod that are used by smart phones and are able to load HTML pages (H5)
 * Because user can easily start the gameplay with simply clicking on a link or scanning a QR code
 
 *Why not mobile APP?*
-* Because the gameplay itself is short and it is unrepeatable. It is different from other iOS game which have either long story (ex. Dungeon Hunter) or repeatable elements (ex. Dice Mage / Flappy Bird). Therefore, the ratio of time spent on actual playing the game and time spent on getting the game is undesirable in my view. Although it is possible to develop an APP either cloning the web version or adding new elements into the game (less likely)
+* Because the gameplay itself is short and it is unrepeatable (expected gaming time: 10 ~ 15 minutes). It is different from other iOS game which have either long story (ex. Dungeon Hunter) or repeatable elements (ex. Dice Mage / Flappy Bird). Therefore, the ratio of time spent on actual playing the game and time spent on getting the game is undesirable in my view. Although it is possible to develop an APP either cloning the web version or adding new elements into the game (less likely)
 
 ##2. Technical Specifications
 * **Platform:** Web
