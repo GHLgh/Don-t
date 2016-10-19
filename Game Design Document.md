@@ -62,7 +62,7 @@ Level 0: *The First Cave*
     * There is nothing in this scene (scene refers to main layer, same applies below) besides the main character
   * Available actions:
     * "right" - move towards the deep of the cave
-  * level_0.jpg
+  * level_0.jpg (TODO)
   
 Level 1: *The Tunnel*
   * Description: 
@@ -71,7 +71,7 @@ Level 1: *The Tunnel*
   * Available actions: 
     * "right" - move towards the deep of the cave
     * "jump" - jump
-  * level_1.jpg
+  * level_1.jpg (TODO)
   
 Level 2: *The Turnoff*
   * Description: 
@@ -81,19 +81,19 @@ Level 2: *The Turnoff*
     * "right" - move towards the deep of the cave
     * "jump" - jump
     * "up" - climb up if possible, otherwise will move the camera up a bit when pressing it
-  * level_2.jpg
+  * level_2.jpg (TODO)
   
 Level 3: Don’t press “down” to get down
   * Description: 
     * 
   * Available actions:
-  * level_3.jpg
+  * level_3.jpg (TODO)
   
 Level 4: Don’t press  “touch” to interact with anything
   * Description: 
     * 
   * Available actions:
-  * level_4.jpg
+  * level_4.jpg (TODO)
   
 <del>Level 4.5 (??): an inter-level which requires player to utilize all the actions without accompanying of the voice (or just make it a part of level 5 / or merge it into level 4)</del> (becomes part of level 4)
 
@@ -101,25 +101,25 @@ Level 5: Pandora’s box => press “left”
   * Description: 
     * 
   * Available actions:
-  * level_5.jpg
+  * level_5.jpg (TODO)
 
 Level 6: Reverse of level 1-4
   * Description: 
     * 
   * Available actions:
-  * level_6.jpg
+  * level_6.jpg (TODO)
 
 Level 7: Reverse of level 0 but with “Don’t press ‘left’ to get out” or just EMPTY as level 0
   * Description: 
     * 
   * Available actions:
-  * level_7.jpg
+  * level_7.jpg (TODO)
 
 Ending level: White screen with credits and gradually lead back to the menu
   * Description: 
     * 
   * Available actions:
-  * level_end.jpg
+  * level_end.jpg (TODO)
 
 ##7. Display
 ### Graphic (TODO)
@@ -130,16 +130,18 @@ Pixelized scene and characters (FEZ / cave story style) - easier to draw but not
     * Title "don't" - will be changed to "do" if the player complete the game
     * Start - start the game at the first scene - the game has no storage of player's process
     * Credits
-    * menuDraft.jpg
+    * menuDraft.jpg (TODO)
   * Scene - Each level of the game
     * Tutorial - prompts that will appear at the top of the screen, also known as the Voice
     * Scene - the area in the middle of the screen that display the placement of objects in the level
     * Contol panel - a box in the bottom of the screen that contains buttons of actions. Player can interact with the game by pressing those buttons (which is active in current level)
+    * generalSceneDraft.jpg (TODO)
   * Ending - The special kind of level (ending level) at the end of the game with animation in background
     * Credits - a list of contributors that can be consider as tutorial portion of Scene, the difference is this will keep scrolling until it reach the end and then the game should return to the menu
     * Scene - the area in the middle of the screen that display the placement of objects in the level
       * possible extension: Some easter eggs can be included
     * Contol panel - a box in the bottom of the screen that contains buttons of actions. Player can interact with the game by pressing those buttons. At this stage, all actions will be activated.
+    * endingSceneDraft.jpg (TODO)
 
 ### Sound
 Sound is not primary factor here due to my lack of experience
