@@ -12,78 +12,108 @@
  * /// <reference path="http://ask.layabox.com/question/601" />
  */
     
-class Enemy{
-        constructor(initX, initY){   
+(function() {
+    function Enemy(){
+        Enemy.__super.call(this);        
+        
+        //hp will become an parameter if more types of enemies are included
         this.hp = 1;
-        this.preForce = {x:1, y:0};
+
+        // action should always be the same (when animation is working)
+        this.action = null;
+        this.body = null;
+
+        // a boolean designed to pause changes on Player object
+        // ex. the x and y location should not change when an interaction is happening
+        this.pause = false;
 
         // use to construct hitting box with this.x and this.y
-        this.width = 40;
-        this.height = 40;
+        this.width = 36;
+        this.height = 36;
+ 
+        //Gravity (vertical movement)
+        //velocity on y direction
+        this.vy = 0;
+        //acceleration on y direction
+        this.ay = 3;
+        //maximum velocity on y direction
+        this.maxVy = 9;
 
-        // use for updating walls
-        // +2 for making sure Math.floor will produce desired value
-        this.yGrid = Math.floor(initY+2/40);
-        this.walls = [null, null];
+        //Horizontal movement (usually non-zero for dynamic objects)
+        this.vx = 6;
 
-        this.body = Browser.window.Matter.Bodies.polygon(initX, initY, 8, 20, {
-				density: 1,
-				render:
-				{
-					sprite:
-					{
-						texture: './res/-15.png',
-					}
-				}
-			});
-        this.body.frictionAir = this.body.friction * 0.8;
-        Browser.window.Matter.Body.setInertia(this.body, Infinity);
+        // TODO: hard coded x, y location, will change later
+        this.x = 100;
+        this.y = 0;
 
-        Laya.timer.frameLoop(1, this, this.onLoop);
+        this.init();
     }
 
-    /* Player.DEFAULT = "defaultStatus"; */
+    Laya.class(Enemy, "Enemy", laya.display.Sprite);
 
-    onLoop(){
-        Browser.window.Matter.Body.applyForce(this.body, this.body.position, this.preForce);
-    }
-
-    updateConstraint(map){
-        this.yGrid = Math.floor((this.body.position.y+2)/40);
-        var level = map[this.yGrid];
-        var xGrid = Math.floor((this.body.position.x+2)/40);
-        
-        for(i = xGrid; i >= 0; i--){
-            if(level[i] != null){
-                this.walls[0] = level[i];
-                break;
-            }
+    var _proto = Enemy.prototype;
+ 
+    _proto.init = function(){
+        if(this.body == null){
+            // simply mapping texture for now because animation does not work
+            var texture = Laya.loader.getRes('res/-15.png');
+            this.graphics.drawTexture(texture, 0, 0, 36, 36);
         }
-        for(i = xGrid; i < 25; i++){
-            if(level[i] != null){
-                this.walls[1] = level[i];
-                console.log(level[i].body.position);
-                break;
-            }
+
+        //创建一个帧循环处理函数
+        Laya.timer.frameLoop(6, this, this.onLoop)
+        console.log("enemy set");
+    }
+
+    _proto.onLoop = function(){
+        if(!this.pause)
+            this.changePosition();
+
+        //TODO: should change into detecting if there is object underneath
+        //      keep it here for testing purpose
+        if( this.y > 100){
+            this.y = 100;
+            this.vy = 0; // reset vertical velocity
+            return;
+        }
+    }
+
+    _proto.changePosition = function(){
+        //falling down
+        this.y += this.vy;
+        this.vy += this.ay;
+ 
+        //limit to the maximun velocity
+        if(this.vy > this.maxVy){
+            this.vy = this.maxVy;
+        }
+
+        this.x += this.vx;
+
+        //make sure it will not go out of bound
+        if(this.x + this.width >= 480 || this.x <= 0){
+            this.vx = -1 * this.vx;
         }
     }
 
     /**
-     * collision
-     * different type of collision will result into different behavior
-     * (horizontalCollisionType, verticalCollisionType, 0:no collision, 1:on terrain, 2:on dynamic object)
-     * h == 1, v != 1: hit the ground: reset jump count and vertical velocity
-     * h == 0, v == 1: hit the wall: bound back if player is in the air
-     * h == 1, v == 1: hit the wall: stop horizontal movement if player is not
-     * h == 2: hit enemy on the top: bound up as if the player jumps with resetting jump count
-     * h != 2, v == 2: hit enemy on the side: player takes damage and possibily dies
+     * 0:hit wall
+     * 1:being hit
      */
-    collision(horizontalCollisionType, verticalCollisionType){
-        if(horizontalCollisionType == 1){
-            this.preForce.x = -1 * this.preForce.x;
-        }
-        if(verticalCollisionType == 2){
-                this.hp -= 1;
+    _proto.collision = function(collisionType){
+        this.vx = -1 * this.vx;        
+        if(collisionType == 1){
+            this.hp -= 1;
+            if(this.hp <= 0)
+                this.disabled();
         }
     }
-}
+
+    /**
+     * disable the enemy when the player collide on the top
+     */
+    _proto.disabled = function(){
+        this.removeSelf();
+    }
+    
+})();
