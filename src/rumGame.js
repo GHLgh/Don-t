@@ -68,24 +68,9 @@ function setup()
 	function initMatter()
 	{
         if(gameWorld == null){
-		gameWorld = new Sprite();
-        gameWorld.size(1000,1000);
-        cameraTrackingBlock = new Sprite();
-        cameraTrackingBlock.size(1000 - stageWidth, 1000 - stageHeight *3 / 4);
-        gameWorld.addChild(cameraTrackingBlock);
-        console.log(gameWorld.x);
-        console.log(gameWorld.y);
-        console.log(gameWorld.width);
-        console.log(gameWorld.height);
-                
-        
-        cameraTrackingBlock.pos(stageWidth / 2, stageHeight / 2);
-        console.log(cameraTrackingBlock.x);
-        console.log(cameraTrackingBlock.y);
-        console.log(cameraTrackingBlock.width);
-        console.log(cameraTrackingBlock.height);
-
-		Laya.stage.addChild(gameWorld);
+		    gameWorld = new Sprite();
+            gameWorld.size(1000,1000);
+		    Laya.stage.addChild(gameWorld);
         }
 
 		// 初始化物理引擎
@@ -107,11 +92,15 @@ function setup()
 		});
 
         Matter.Events.on(engine, 'collisionStart', function(event){collisionDetection(event);});
+        //TODO: better way??
+        Matter.Events.on(engine, 'collisionActive', function(event){eventTrigger(event);})
 
 	}
 
 	function initWorld()
 	{
+        // initialize camera tracking
+        iniCameraTracking();                    
         for(i = 0; i < 25; i++){
             terrainMap.push(new Array(25));
             for(j = 0; j < 25; j++)
@@ -179,7 +168,12 @@ function setup()
         }
     }
 
-    
+    function iniCameraTracking(){
+        cameraTrackingBlock = new Sprite();
+        cameraTrackingBlock.size(1000 - stageWidth, 1000 - stageHeight *3 / 4);
+        gameWorld.addChild(cameraTrackingBlock);
+        cameraTrackingBlock.pos(stageWidth/2, stageHeight/2);
+    }
 
     function cameraTracking(){
         var worldTranslationX = gameWorld.x + (preX - player.body.position.x);
@@ -191,16 +185,29 @@ function setup()
             
         if(worldTranslationY > 0)
             worldTranslationY = 0;
-        else if(worldTranslationY + gameWorld.height < stageHeight - 300)
-            worldTranslationY = (stageHeight-300) - gameWorld.height;
-
-        /*if((player.body.position.x >= cameraTrackingBlock.x 
-            && player.body.position.x < cameraTrackingBlock.x + cameraTrackingBlock.width)
-            || (player.body.position.y >= cameraTrackingBlock.y 
-            && player.body.position.y < cameraTrackingBlock.y + cameraTrackingBlock.height))*/{
-            gameWorld.pos(worldTranslationX, worldTranslationY);                
+        else if(worldTranslationY + gameWorld.height < stageHeight - 120)
+            worldTranslationY = (stageHeight-120) - gameWorld.height;
+          
+        if((player.body.position.x + player.width >= cameraTrackingBlock.x 
+            && player.body.position.x  < cameraTrackingBlock.x + cameraTrackingBlock.width))
             preX = player.body.position.x;
+        if((player.body.position.y + player.height>= cameraTrackingBlock.y 
+            && player.body.position.y  < cameraTrackingBlock.y + cameraTrackingBlock.height)){
             preY = player.body.position.y;
+        }
+        gameWorld.pos(worldTranslationX, worldTranslationY);                
+    }
+
+    function eventTrigger(event){
+        var pairs = event.pairs;
+        for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i];
+            // if EventTrigger is involved
+            if(pair.bodyA.collisionFilter.category == eventCategory 
+                    || pair.bodyB.collisionFilter.category == eventCategory){
+                pair.bodyA.gameObject.collision(pair.bodyB, activeTrigger);
+                pair.bodyB.gameObject.collision(pair.bodyA, activeTrigger);
+            }
         }
     }
 

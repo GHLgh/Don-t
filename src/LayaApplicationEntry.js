@@ -180,8 +180,8 @@ function downBtnHandler(e)
 	{
 		case Event.MOUSE_DOWN:
             activeTrigger = true;
-            console.log(player.body.position.x);
-            console.log(player.body.position.y);                            
+            console.log({playerX:player.body.position.x,playerY:player.body.position.y});
+            console.log({worldX:gameWorld.x,worldY:gameWorld.y});                          
 			break;
 		case Event.MOUSE_UP:
              activeTrigger = false;

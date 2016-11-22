@@ -44,16 +44,13 @@ class EventTrigger{
     }
 
     collision(collidedBody, activeTrigger){
-        if(this.needActive == true && activeTrigger == false);
+        if(this.needActive == true && activeTrigger == false)
+            ;//Matter.Events.on(this.body, "collisionActive", collision(null, activeTrigger))
         else{
             switch (this.eventType){
                 case "terrain":
                     Browser.window.Matter.Body.setDensity(this.linkObject.body, 1);
                     Browser.window.Matter.Body.setStatic(this.linkObject.body, false);
-                    break;
-                case "verticalCameraTracking":
-                    break;
-                case "horizontalCameraTracking":
                     break;
                 default:
             }

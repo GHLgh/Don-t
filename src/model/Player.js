@@ -148,8 +148,9 @@ class Player{
      */
     collision(collidedBody, activeTrigger){
         //player.body.position.y < enemy.body.position.y - 20
-        //player is on the collidedBody
-        if(toYGrid(this.body.position.y) < toYGrid(collidedBody.position.y)){
+        //player is on the collidedBody and it is not event block
+        if(toYGrid(this.body.position.y) < toYGrid(collidedBody.position.y) 
+                && collidedBody.collisionFilter.category != eventCategory){
             this.jumpCount = 0;
         }
         //player is under the collidedBody and it is enemy
