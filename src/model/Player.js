@@ -13,6 +13,13 @@
  * /// <reference path="http://ask.layabox.com/question/601" />
  */
 
+// variable to define groups will collide with
+var playerGroup = 1;
+var playerCategory = 0x0001;
+// this is actually the default value which means will collide with anything in the scene
+var playerMask = 0xffff;
+
+
 class Player{
     constructor(initX, initY){   
         this.hp = 1;
@@ -30,6 +37,12 @@ class Player{
 
         this.body = Browser.window.Matter.Bodies.polygon(initX, initY, 8, 20, {
 				density: 1,
+                collisionFilter:
+                {
+                    group: playerGroup,
+                    category: playerCategory,
+                    mask: playerMask,
+                },
 				render:
 				{
 					sprite:

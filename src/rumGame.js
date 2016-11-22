@@ -30,6 +30,8 @@ var map = [
 	];
 
 var terrainMap = [];
+//For now cameraTracking is using variables to store the boundary
+
 
 var activeTrigger = false;
 

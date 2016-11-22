@@ -11,7 +11,14 @@
  * /// cite: 简单跑酷--JS版, author: callback
  * /// <reference path="http://ask.layabox.com/question/601" />
  */
-    
+
+// variable to define groups will collide with
+var enemyGroup = 2;
+// default value
+var enemyCategory = 0x0010;
+// will not collide with category 0x1000 (event block)
+var enemyMask = 0xefff;
+
 class Enemy{
         constructor(initX, initY){   
         this.hp = 1;
@@ -28,6 +35,12 @@ class Enemy{
 
         this.body = Browser.window.Matter.Bodies.polygon(initX, initY, 8, 20, {
 				density: 1,
+                collisionFilter:
+                {
+                    group: enemyGroup,
+                    category: enemyCategory,
+                    mask: enemyMask,
+                },
 				render:
 				{
 					sprite:

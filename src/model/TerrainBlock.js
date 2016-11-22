@@ -4,6 +4,14 @@
  * /// cite: 简单跑酷--JS版, author: callback
  * /// <reference path="http://ask.layabox.com/question/601" />
  */
+
+// variable to define groups will collide with
+var terrainGroup = 3;
+// default value
+var terrainCategory = 0x0100;
+// will not collide with category 0x1000 (event block)
+var terrainMask = 0xefff;
+
 class TerrainBlock{
     constructor(initX, initY){
         // hp may be used later for creating hidden path
@@ -18,6 +26,12 @@ class TerrainBlock{
         // TODO: hard coded x, y location, will change later
         this.body = Browser.window.Matter.Bodies.rectangle(initX, initY, 40, 40, {
 				    isStatic: true,
+                    collisionFilter:
+                {
+                    group: terrainGroup,
+                    category: terrainCategory,
+                    mask: terrainMask,
+                },
 				    render:
 				    {
 					    sprite:
