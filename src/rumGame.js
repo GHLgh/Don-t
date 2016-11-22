@@ -218,7 +218,6 @@ function setup()
         for(i = 0; i < enemyList.length; i++){
             var enemy = enemyList[i];
             if(enemy.hp == 0){
-                Matter.Composite.remove(engine.world, enemy.body);
                 continue;
             }
             if(enemy.yGrid != Math.floor((enemy.body.position.y+2)/40))
@@ -245,7 +244,8 @@ function setup()
     }
 
     function removeObject(object){
-        object.body.visible = false;
+        Matter.Composite.remove(engine.world, object.body);
+        object.body.sprite.visible = false;
     }
 
     function checkPlayer(){
