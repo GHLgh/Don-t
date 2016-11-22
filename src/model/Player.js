@@ -52,6 +52,9 @@ class Player{
 				}
 			});
         this.body.frictionAir = this.body.friction * 0.8;
+// use as an entry to itself when collsion happened
+        this.body.gameObject = this;
+
         Browser.window.Matter.Body.setInertia(this.body, Infinity);
 
         Laya.timer.frameLoop(1, this, this.onLoop);
@@ -143,9 +146,16 @@ class Player{
      * h == 2: hit enemy on the top: bound up as if the player jumps with resetting jump count
      * h != 2, v == 2: hit enemy on the side: player takes damage and possibily dies
      */
-    collision(horizontalCollisionType, verticalCollisionType){
-        if(verticalCollisionType == 2){
-            player.hp -= 1;
+    collision(collidedBody, activeTrigger){
+        //player.body.position.y < enemy.body.position.y - 20
+        //player is on the collidedBody
+        if(toYGrid(this.body.position.y) < toYGrid(collidedBody.position.y)){
+            this.jumpCount = 0;
+        }
+        //player is under the collidedBody and it is enemy
+        else if(collidedBody.collisionFilter.category == enemyCategory){
+            console.log("subtract hp");
+            this.hp -= 1;
         }
     }
     

@@ -12,12 +12,13 @@
  * /// <reference path="http://ask.layabox.com/question/601" />
  */
 
-// variable to define groups will collide with
-var enemyGroup = 2;
+// variable to define groups will collide with (change to default value 0
+// such that the engine will check collision any time)
+var enemyGroup = 0;
 // default value
 var enemyCategory = 0x0010;
-// will not collide with category 0x1000 (event block)
-var enemyMask = 0xefff;
+// will not collide with category 0x1000 (event block) and 0x0010 (other enemy)
+var enemyMask = 0xefef;
 
 class Enemy{
         constructor(initX, initY){   
@@ -50,6 +51,10 @@ class Enemy{
 				}
 			});
         this.body.frictionAir = this.body.friction * 0.8;
+
+        // use as an entry to itself when collsion happened
+        this.body.gameObject = this;
+
         Browser.window.Matter.Body.setInertia(this.body, Infinity);
 
         Laya.timer.frameLoop(1, this, this.onLoop);
@@ -63,20 +68,22 @@ class Enemy{
 
     updateConstraint(map){
         this.yGrid = Math.floor((this.body.position.y+2)/40);
-        var level = map[this.yGrid];
-        var xGrid = Math.floor((this.body.position.x+2)/40);
+        if(this.yGrid >= 0 && this.yGrid < map.length){
+            var level = map[this.yGrid];
+            var xGrid = Math.floor((this.body.position.x+2)/40);
         
-        for(i = xGrid; i >= 0; i--){
-            if(level[i] != null){
-                this.walls[0] = level[i];
-                break;
+            for(i = xGrid; i >= 0; i--){
+                if(level[i] != null){
+                    this.walls[0] = level[i];
+                    break;
+                }
             }
-        }
-        for(i = xGrid; i < 25; i++){
-            if(level[i] != null){
-                this.walls[1] = level[i];
-                console.log(level[i].body.position);
-                break;
+            for(i = xGrid; i < 25; i++){
+                if(level[i] != null){
+                    this.walls[1] = level[i];
+                    console.log(level[i].body.position);
+                    break;
+                }
             }
         }
     }
@@ -91,12 +98,28 @@ class Enemy{
      * h == 2: hit enemy on the top: bound up as if the player jumps with resetting jump count
      * h != 2, v == 2: hit enemy on the side: player takes damage and possibily dies
      */
-    collision(horizontalCollisionType, verticalCollisionType){
-        if(horizontalCollisionType == 1){
+    collision(collidedBody, activeTrigger){
+        //player.body.position.y < enemy.body.position.y - 20
+        //enemy is under the collidedBody and it is player
+        if(toYGrid(this.body.position.y) > toYGrid(collidedBody.position.y) 
+                && collidedBody.collisionFilter.category == playerCategory){
+            this.hp -= 1;
+            if(this.hp == 0)
+                removeObject(this);
+        }
+        else if(toYGrid(collidedBody.position.y) == toYGrid(this.body.position.y)){
             this.preForce.x = -1 * this.preForce.x;
+        }
+        
+        /*if(horizontalCollisionType == 1){
+            this.preForce.x = -1 * this.preForce.x;
+        //console.log(this.body.gameObject.hp);
+            
         }
         if(verticalCollisionType == 2){
                 this.hp -= 1;
-        }
+                //console.log(this.body.gameObject.hp);
+                
+        }*/
     }
 }

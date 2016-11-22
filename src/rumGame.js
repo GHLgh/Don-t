@@ -105,6 +105,9 @@ function setup()
 				}
 			}
 		});
+
+        Matter.Events.on(engine, 'collisionStart', function(event){collisionDetection(event);});
+
 	}
 
 	function initWorld()
@@ -131,11 +134,11 @@ function setup()
               }
         }
         
-        var exampleEvent = new EventTrigger(40*5, 40*5, terrainMap[6][6], "terrain");
+        var exampleEvent = new EventTrigger(40*5, 40*5, 40, 40, terrainMap[6][6], "terrain", false);
         initiativeEventList.push(exampleEvent);
         Matter.World.add(engine.world, exampleEvent.body);
 
-        var exampleEvent = new EventTrigger(40*3, 40*5, terrainMap[6][2], "terrain");
+        var exampleEvent = new EventTrigger(40*3, 40*5, 40, 40, terrainMap[6][2], "terrain", true);
         passiveEventList.push(exampleEvent);
         Matter.World.add(engine.world, exampleEvent.body);
 
@@ -171,7 +174,7 @@ function setup()
     function onLoop(){
         if(isGameOver == false){
             cameraTracking();
-            collisionDetection();
+            //collisionDetection();
             checkPlayer();
         }
     }
@@ -201,8 +204,14 @@ function setup()
         }
     }
 
-    function collisionDetection(){
-        if(activeTrigger){
+    function collisionDetection(event){
+        var pairs = event.pairs;
+        for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i];
+            pair.bodyA.gameObject.collision(pair.bodyB, activeTrigger);
+            pair.bodyB.gameObject.collision(pair.bodyA, activeTrigger);
+        }
+        /*if(activeTrigger){
             for(i = 0; i < passiveEventList.length; i++){
                 var eventTrigger = passiveEventList[i];
                 if(Matter.Detector.collisions([[eventTrigger.body, player.body]], engine).length > 0){
@@ -242,7 +251,7 @@ function setup()
                     player.collision(0, 2);
                 }
             }
-        }
+        }*/
     }
 
     function removeObject(object){
@@ -268,4 +277,8 @@ function setup()
             }
         }
         rawFile.send(null);
+    }
+
+    function toYGrid(yPosition){
+        return Math.floor((yPosition+2)/40)
     }

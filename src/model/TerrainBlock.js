@@ -41,5 +41,11 @@ class TerrainBlock{
 				    }
 			    });
 
+                // use as an entry to itself when collsion happened
+        this.body.gameObject = this;
+
     }
+
+    // such that the game will not break
+    collision(collidedBody, activeTrigger){}
 }
