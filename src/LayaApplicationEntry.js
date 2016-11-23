@@ -12,8 +12,9 @@ var Handler = Laya.Handler;
 var Event   = Laya.Event;
 var Text    = laya.display.Text;
 
-var stageWidth = Browser.width;
-var stageHeight = Browser.height;
+var stageWidth = Browser.window.innerWidth;
+var stageHeight = Browser.window.innerHeight;
+var pixelRatio = Browser.pixelRatio;
 
 var Matter  = Browser.window.Matter;
 var LayaRender = Browser.window.LayaRender;
@@ -21,11 +22,11 @@ var LayaRender = Browser.window.LayaRender;
 var engine;
 
 //laya初始化
-Laya.init(1000, 1000, Laya.WebGL);
+Laya.init(stageWidth, stageHeight, Laya.WebGL);
 //FPS
 //Laya.Stat.show(0,0);
 //设置适配模式
-Laya.stage.scaleMode = "noscale";
+Laya.stage.scaleMode = "full";
 //设置剧中对齐
 Laya.stage.alignH = "center";
 //设置横屏
@@ -56,15 +57,15 @@ function onLoaded(){
     Laya.stage.removeChild(loading);
     Laya.stage.on(Event.RESIZE,this,onResize);
     setStartMenu();
+    console.log(Browser.pixelRatio);
 }
 
 function onResize(){
     //横屏显示调整
-    
-        stageWidth=Browser.width;
-        stageHeight=Browser.height;
-        //Laya.stage.width = stageWidth;
-        //Laya.stage.height = stageHeight;
+        console.log({width: Laya.stage.width, height: Laya.stage.height});    
+        stageWidth=Browser.window.innerWidth;
+        stageHeight=Browser.window.innerHeight;
+        
         if(gameOver != null){
             setGameOverScreen();
         }

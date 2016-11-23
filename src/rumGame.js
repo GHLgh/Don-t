@@ -161,7 +161,7 @@ function setup()
     }
 
     function onLoop(){
-        if(true){
+        if(player != null){
             cameraTracking();
             //collisionDetection();
             checkPlayer();
