@@ -26,15 +26,10 @@ class Enemy{
         this.preForce = {x:1, y:0};
 
         // use to construct hitting box with this.x and this.y
-        this.width = 40;
-        this.height = 40;
+        this.width = 40 * pixelRatio;
+        this.height = 40 * pixelRatio;
 
-        // use for updating walls
-        // +2 for making sure Math.floor will produce desired value
-        this.yGrid = Math.floor(initY+2/40);
-        this.walls = [null, null];
-
-        this.body = Browser.window.Matter.Bodies.polygon(initX, initY, 8, 20, {
+        this.body = Browser.window.Matter.Bodies.polygon(initX, initY, 8, 20 * pixelRatio, {
 				density: 1,
                 collisionFilter:
                 {
@@ -47,6 +42,8 @@ class Enemy{
 					sprite:
 					{
 						texture: './res/-15.png',
+                        xScale: pixelRatio,
+                        yScale: pixelRatio,
 					}
 				}
 			});
@@ -56,6 +53,8 @@ class Enemy{
         this.body.gameObject = this;
 
         Browser.window.Matter.Body.setInertia(this.body, Infinity);
+        Browser.window.Matter.Body.setMass(this.body, defaultMass);
+
 
         Laya.timer.frameLoop(1, this, this.onLoop);
     }
@@ -63,29 +62,7 @@ class Enemy{
     /* Player.DEFAULT = "defaultStatus"; */
 
     onLoop(){
-        Browser.window.Matter.Body.applyForce(this.body, this.body.position, this.preForce);
-    }
-
-    updateConstraint(map){
-        this.yGrid = Math.floor((this.body.position.y+2)/40);
-        if(this.yGrid >= 0 && this.yGrid < map.length){
-            var level = map[this.yGrid];
-            var xGrid = Math.floor((this.body.position.x+2)/40);
-        
-            for(i = xGrid; i >= 0; i--){
-                if(level[i] != null){
-                    this.walls[0] = level[i];
-                    break;
-                }
-            }
-            for(i = xGrid; i < 25; i++){
-                if(level[i] != null){
-                    this.walls[1] = level[i];
-                    console.log(level[i].body.position);
-                    break;
-                }
-            }
-        }
+        useTheForce(this.body, this.body.position, this.preForce);
     }
 
     /**
@@ -110,16 +87,5 @@ class Enemy{
         else if(toYGrid(collidedBody.position.y) == toYGrid(this.body.position.y)){
             this.preForce.x = -1 * this.preForce.x;
         }
-        
-        /*if(horizontalCollisionType == 1){
-            this.preForce.x = -1 * this.preForce.x;
-        //console.log(this.body.gameObject.hp);
-            
-        }
-        if(verticalCollisionType == 2){
-                this.hp -= 1;
-                //console.log(this.body.gameObject.hp);
-                
-        }*/
     }
 }

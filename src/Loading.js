@@ -16,7 +16,7 @@ class Loading extends Laya.Sprite{
         //loading文本
         this.txt = new Text();
         this.txt.color = "#ffffff";
-        this.txt.fontSize = 30;
+        this.txt.fontSize = 30  * pixelRatio;
         this.txt.text = "Loading";
         this.txt.width = stageWidth;
         this.txt.align = "center";

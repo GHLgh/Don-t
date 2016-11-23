@@ -24,7 +24,7 @@
         //loading文本
         this.txt = new Text();
         this.txt.color = "#ffffff";
-        this.txt.fontSize = 30;
+        this.txt.fontSize = 30  * pixelRatio;
         this.txt.text = "GameOver\n\nMay death never stop you";
         this.txt.width = stageWidth;
         this.txt.align = "center";
@@ -32,13 +32,15 @@
         this.addChild(this.txt);
          
         this.restartBtn = new Button("res/simpleBtn.png", "restart");
-        this.restartBtn.size(80, 40);
+        this.restartBtn.size(80  * pixelRatio, 40  * pixelRatio);
+        this.restartBtn.labelSize = this.restartBtn.labelSize * pixelRatio;
         this.restartBtn.pos(0.5 * (stageWidth - this.restartBtn.width), 0.5 *(stageHeight - this.restartBtn.height));
         this.addChild(this.restartBtn);
 
         this.exitBtn = new Button("res/simpleBtn.png", "exit");
-        this.exitBtn.size(80, 40);
-        this.exitBtn.pos(this.restartBtn.x, this.restartBtn.y + 60);
+        this.exitBtn.size(80  * pixelRatio, 40  * pixelRatio);
+        this.exitBtn.labelSize = this.exitBtn.labelSize * pixelRatio;
+        this.exitBtn.pos(this.restartBtn.x, this.restartBtn.y + this.restartBtn.height * 1.5);
         this.addChild(this.exitBtn);
     }
 }

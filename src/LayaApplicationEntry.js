@@ -12,9 +12,9 @@ var Handler = Laya.Handler;
 var Event   = Laya.Event;
 var Text    = laya.display.Text;
 
-var stageWidth = Browser.window.innerWidth;
-var stageHeight = Browser.window.innerHeight;
-var pixelRatio = Browser.pixelRatio;
+const pixelRatio = Browser.pixelRatio;
+var stageWidth = Browser.window.innerWidth * pixelRatio;
+var stageHeight = Browser.window.innerHeight * pixelRatio;
 
 var Matter  = Browser.window.Matter;
 var LayaRender = Browser.window.LayaRender;
@@ -63,8 +63,8 @@ function onLoaded(){
 function onResize(){
     //横屏显示调整
         console.log({width: Laya.stage.width, height: Laya.stage.height});    
-        stageWidth=Browser.window.innerWidth;
-        stageHeight=Browser.window.innerHeight;
+        stageWidth=Browser.window.innerWidth * pixelRatio;
+        stageHeight=Browser.window.innerHeight * pixelRatio;
         
         if(gameOver != null){
             setGameOverScreen();
@@ -79,8 +79,6 @@ function onResize(){
             iniCameraTracking();
         }
         console.log("resize");
-        console.log({width:Browser.window.innerWidth,height:Browser.window.innerHeight});
-        console.log({width:Browser.width,height:Browser.height});
 }
 
 function setStartMenu(){
@@ -88,8 +86,6 @@ function setStartMenu(){
         Laya.stage.removeChild(this.startMenu);
     this.startMenu = new StartMenu();
 	Laya.stage.addChild(this.startMenu);
-            console.log({width:Browser.window.innerWidth,height:Browser.window.innerHeight});
-            console.log({width:Browser.width,height:Browser.height});
 
     this.startMenu.startBtn.on(laya.events.Event.MOUSE_DOWN, this, this.gameStart);
 }
@@ -135,7 +131,7 @@ function onUIAssetsLoaded(){
     controlBackground.pos(0, stageHeight *4 / 5);    
     dPadCenterXLeft = stageWidth / 4;
     dPadCenterXRight = stageWidth / 4 * 3;
-    var btnSize = 60;
+    var btnSize = 60 * pixelRatio;
     
 	dPadCenterY = stageHeight / 10 - btnSize / 2;
 

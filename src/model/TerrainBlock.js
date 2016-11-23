@@ -20,11 +20,11 @@ class TerrainBlock{
         this.hp = 50;
 
         // use to construct hitting box with this.x and this.y
-        this.width = 40;
-        this.height = 40;
+        this.width = 40 * pixelRatio;
+        this.height = 40 * pixelRatio;
  
         // TODO: hard coded x, y location, will change later
-        this.body = Browser.window.Matter.Bodies.rectangle(initX, initY, 40, 40, {
+        this.body = Browser.window.Matter.Bodies.rectangle(initX, initY, 40 * pixelRatio, 40 * pixelRatio, {
 				    isStatic: true,
                     collisionFilter:
                 {
@@ -36,7 +36,9 @@ class TerrainBlock{
 				    {
 					    sprite:
                         {
-                            texture: "./res/terrainBlockTemp.png"
+                            texture: "./res/terrainBlockTemp.png",
+                        xScale: pixelRatio,
+                        yScale: pixelRatio,
                         }
 				    }
 			    });

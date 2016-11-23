@@ -1,3 +1,5 @@
+const defaultMass = 1000;
+
 var isGameOver = false;
 
 var map = [
@@ -69,7 +71,7 @@ function setup()
 	{
         if(gameWorld == null){
 		    gameWorld = new Sprite();
-            gameWorld.size(1000,1000);
+            gameWorld.size(1000 * pixelRatio,1000 * pixelRatio);
 		    Laya.stage.addChild(gameWorld);
         }
 
@@ -83,8 +85,8 @@ function setup()
 				controller: LayaRender,
 				options:
 				{
-					width: 1000,
-					height: 1000,
+					width: 1000 * pixelRatio,
+					height: 1000 * pixelRatio,
 					//background: './res/background.png',
 					hasBounds: true
 				}
@@ -105,17 +107,17 @@ function setup()
             terrainMap.push(new Array(25));
             for(j = 0; j < 25; j++)
               if(map[i][j] == '1'){
-                var terrainBlock = new TerrainBlock(j*40, i*40);
+                var terrainBlock = new TerrainBlock(j*40 * pixelRatio, i*40 * pixelRatio);
                 Matter.World.add(engine.world, terrainBlock.body);
                 terrainMap[i][j] = terrainBlock;
               }
               else{ 
                   if(map[i][j] == '2'){
-                    player = new Player(40*j, 40*i);
+                    player = new Player(40*j * pixelRatio, 40*i * pixelRatio);
                     //console.log("player created");
                   }
                   else if(map[i][j] == '3'){
-                    enemyList.push(new Enemy(40*j, 40*i));
+                    enemyList.push(new Enemy(40*j * pixelRatio, 40*i * pixelRatio));
 		            Matter.World.add(engine.world, enemyList[enemyList.length - 1].body);                    
                     //console.log("enemy created");
                   }
@@ -123,19 +125,16 @@ function setup()
               }
         }
         
-        var exampleEvent = new EventTrigger(40*5, 40*5, 40, 40, terrainMap[6][6], "terrain", false);
+        var exampleEvent = new EventTrigger(40*5 * pixelRatio, 40*5 * pixelRatio, 40 * pixelRatio, 40 * pixelRatio, terrainMap[6][6], "terrain", false);
         initiativeEventList.push(exampleEvent);
         Matter.World.add(engine.world, exampleEvent.body);
 
-        var exampleEvent = new EventTrigger(40*3, 40*5, 40, 40, terrainMap[6][2], "terrain", true);
+        var exampleEvent = new EventTrigger(40*3 * pixelRatio, 40*5 * pixelRatio, 40 * pixelRatio, 40 * pixelRatio, terrainMap[6][2], "terrain", true);
         passiveEventList.push(exampleEvent);
         Matter.World.add(engine.world, exampleEvent.body);
 
         if(player != null)
-		    Matter.World.add(engine.world, player.body);
-        for(i = 0; i < enemyList.length; i++){
-            enemyList[i].updateConstraint(terrainMap);
-        }        
+		    Matter.World.add(engine.world, player.body);      
 
 		var renderOptions = engine.render.options;
 		renderOptions.wireframes = false;
@@ -172,7 +171,7 @@ function setup()
         if(cameraTrackingBlock != null)
             gameWorld.removeChild(cameraTrackingBlock);
         cameraTrackingBlock = new Sprite();
-        cameraTrackingBlock.size(1000 - stageWidth, 1000 - stageHeight *3 / 4);
+        cameraTrackingBlock.size(gameWorld.width - stageWidth, gameWorld.height - stageHeight *3 / 4);
         gameWorld.addChild(cameraTrackingBlock);
         cameraTrackingBlock.pos(stageWidth/2, stageHeight/2);
         preX = stageWidth/2;
@@ -222,47 +221,6 @@ function setup()
             pair.bodyA.gameObject.collision(pair.bodyB, activeTrigger);
             pair.bodyB.gameObject.collision(pair.bodyA, activeTrigger);
         }
-        /*if(activeTrigger){
-            for(i = 0; i < passiveEventList.length; i++){
-                var eventTrigger = passiveEventList[i];
-                if(Matter.Detector.collisions([[eventTrigger.body, player.body]], engine).length > 0){
-                    eventTrigger.trigger();
-                }
-            }
-        }
-
-        for(i = 0; i < initiativeEventList.length; i++){
-            var eventTrigger = initiativeEventList[i];
-            if(Matter.Detector.collisions([[eventTrigger.body, player.body]], engine).length > 0){
-                eventTrigger.trigger();
-            }
-        }
-        for(i = 0; i < enemyList.length; i++){
-            var enemy = enemyList[i];
-            if(enemy.hp == 0){
-                continue;
-            }
-            if(enemy.yGrid != Math.floor((enemy.body.position.y+2)/40))
-                enemy.updateConstraint(terrainMap);
-
-            //check if collide the wall
-            if(Matter.Detector.collisions([[enemy.body, enemy.walls[0].body],[enemy.body, enemy.walls[1].body]], engine).length > 0){
-                enemy.collision(1, 0);
-            }
-            
-            //check if collide to player
-            if(Matter.Detector.collisions([[enemy.body, player.body]], engine).length > 0){
-                if(player.body.position.y < enemy.body.position.y - 20){
-                    enemy.collision(1, 2);
-                    if(enemy.hp == 0){
-                        removeObject(enemy);
-                    }
-                }
-                else{
-                    player.collision(0, 2);
-                }
-            }
-        }*/
     }
 
     function removeObject(object){
@@ -291,5 +249,10 @@ function setup()
     }
 
     function toYGrid(yPosition){
-        return Math.floor((yPosition+2)/40)
+        return Math.floor((yPosition+2)/(40 * pixelRatio));
+    }
+
+    function useTheForce(body, position, preForce){
+        var force = {x:preForce.x * pixelRatio, y:preForce.y * pixelRatio};
+        Browser.window.Matter.Body.applyForce(body, position, preForce);
     }

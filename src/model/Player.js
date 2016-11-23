@@ -27,16 +27,11 @@ class Player{
         this.maxJump = 1;
         this.preForce = {x:0, y:0};
 
-        //hack
-        this.preY = 0;
-        this.pre2Y = 1;
-
         // use to construct hitting box with this.x and this.y
-        this.width = 40;
-        this.height = 40;
+        this.width = 40 * pixelRatio;
+        this.height = 40 * pixelRatio;
 
-        this.body = Browser.window.Matter.Bodies.polygon(initX, initY, 8, 20, {
-				density: 1,
+        this.body = Browser.window.Matter.Bodies.polygon(initX, initY, 8, 20 * pixelRatio, {
                 collisionFilter:
                 {
                     group: playerGroup,
@@ -48,14 +43,18 @@ class Player{
 					sprite:
 					{
 						texture: './res/15.png',
+                        xScale: pixelRatio,
+                        yScale: pixelRatio,
 					}
 				}
 			});
         this.body.frictionAir = this.body.friction * 0.8;
+        
 // use as an entry to itself when collsion happened
         this.body.gameObject = this;
 
         Browser.window.Matter.Body.setInertia(this.body, Infinity);
+        Browser.window.Matter.Body.setMass(this.body, defaultMass);
 
         Laya.timer.frameLoop(1, this, this.onLoop);
     }
@@ -63,13 +62,8 @@ class Player{
     /* Player.DEFAULT = "defaultStatus"; */
 
     onLoop(){
-        Browser.window.Matter.Body.applyForce(this.body, this.body.position, this.preForce);
-        if(this.jumpCount == this.maxJump && this.body.position.y == this.preY && this.body.position.y == this.pre2Y)
-            this.jumpCount = 0;
-        else if(this.jumpCount == this.maxJump){
-            this.pre2Y = this.preY;
-            this.preY = this.body.position.y;
-        }
+        console.log(this.body.mass);
+            useTheForce(this.body, this.body.position, this.preForce);        
     }
 
     /**
@@ -81,11 +75,9 @@ class Player{
     jump(){
        //this.playAction(Player.JUMP);
        if(this.jumpCount < this.maxJump){
-            this.jumpCount += 1;
-            this.preY = 0;
-            this.pre2Y = 1;        
+            this.jumpCount += 1;       
             this.preForce.y = -50;
-            Matter.Body.applyForce(this.body, this.body.position, this.preForce);
+            useTheForce(this.body, this.body.position, this.preForce);
             this.preForce.y = 0;
        }
     }

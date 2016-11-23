@@ -1,4 +1,6 @@
-    class StartMenu extends Laya.Sprite{
+// Another way to utilize pixelRatio is scaling
+    
+        class StartMenu extends Laya.Sprite{
         constructor(){
             super();
             this.bg = null;
@@ -19,7 +21,7 @@
         //loading文本
         this.txt = new Text();
         this.txt.color = "#ffffff";
-        this.txt.fontSize = 30;
+        this.txt.fontSize = 30  * pixelRatio ;
         this.txt.text = "Title";
         this.txt.width = stageWidth;
         this.txt.align = "center";
@@ -27,7 +29,8 @@
         this.addChild(this.txt);
          
         this.startBtn = new Button("res/simpleBtn.png", "start");
-        this.startBtn.size(80, 40);
+        this.startBtn.size(80 * pixelRatio, 40 * pixelRatio);
+        this.startBtn.labelSize = this.startBtn.labelSize * pixelRatio;
         this.startBtn.pos(0.5 * (stageWidth - this.startBtn.width), 0.5 *(stageHeight - this.startBtn.height));
         this.addChild(this.startBtn);
     }
