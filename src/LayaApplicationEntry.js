@@ -12,8 +12,8 @@ var Handler = Laya.Handler;
 var Event   = Laya.Event;
 var Text    = laya.display.Text;
 
-const stageWidth = Browser.window.innerWidth;
-const stageHeight = Browser.window.innerHeight;
+var stageWidth = Browser.width;
+var stageHeight = Browser.height;
 
 var Matter  = Browser.window.Matter;
 var LayaRender = Browser.window.LayaRender;
@@ -21,19 +21,20 @@ var LayaRender = Browser.window.LayaRender;
 var engine;
 
 //laya初始化
-Laya.init(stageWidth, stageHeight, Laya.WebGL);
+Laya.init(1000, 1000, Laya.WebGL);
 //FPS
 //Laya.Stat.show(0,0);
 //设置适配模式
-Laya.stage.scaleMode = "full";
+Laya.stage.scaleMode = "noscale";
 //设置剧中对齐
 Laya.stage.alignH = "center";
 //设置横屏
-Laya.stage.screenMode = "vertical";
+Laya.stage.screenMode = "none";
 Laya.stage.bgColor = "#232628";
 
 var gameOver = null;
 var startMenu = null;
+var controlBackground = null;
 
 var loading = new Loading();
 Laya.stage.addChild(loading);
@@ -47,19 +48,47 @@ Laya.loader.load(["res/upBtn.png", "res/rightBtn.png", "res/leftBtn.png",
 //加载进度
 function onLoading(progress){
     loading.progress(progress);
-    console.log("onLoading: " + progress);
+    //console.log("onLoading: " + progress);
 }
 
 //加载完毕
 function onLoaded(){
     Laya.stage.removeChild(loading);
-
+    Laya.stage.on(Event.RESIZE,this,onResize);
     setStartMenu();
 }
 
+function onResize(){
+    //横屏显示调整
+    
+        stageWidth=Browser.width;
+        stageHeight=Browser.height;
+        //Laya.stage.width = stageWidth;
+        //Laya.stage.height = stageHeight;
+        if(gameOver != null){
+            setGameOverScreen();
+        }
+        if(startMenu != null){
+            setStartMenu();
+        }
+        if(controlBackground != null){
+            onUIAssetsLoaded();
+        }
+        if(cameraTrackingBlock != null){
+            iniCameraTracking();
+        }
+        console.log("resize");
+        console.log({width:Browser.window.innerWidth,height:Browser.window.innerHeight});
+        console.log({width:Browser.width,height:Browser.height});
+}
+
 function setStartMenu(){
+    if(this.startMenu != null)
+        Laya.stage.removeChild(this.startMenu);
     this.startMenu = new StartMenu();
 	Laya.stage.addChild(this.startMenu);
+            console.log({width:Browser.window.innerWidth,height:Browser.window.innerHeight});
+            console.log({width:Browser.width,height:Browser.height});
 
     this.startMenu.startBtn.on(laya.events.Event.MOUSE_DOWN, this, this.gameStart);
 }
@@ -67,6 +96,7 @@ function setStartMenu(){
 function gameStart(){
     // run the setup function in runGame.js
     Laya.stage.removeChild(this.startMenu);
+    this.startMenu = null;
 
     setup();
 
@@ -76,6 +106,8 @@ function gameStart(){
 }
 
 function setGameOverScreen(){
+    if(this.gameOver != null)
+        Laya.stage.removeChild(this.gameOver);
     this.gameOver = new GameOver();
 	this.gameOver.visible = false;
 	Laya.stage.addChild(this.gameOver);
@@ -94,15 +126,18 @@ function gameReset(){
 }
 
 function onUIAssetsLoaded(){
-    var controlBackground = new Sprite();
-    controlBackground.graphics.drawRect(0,0,stageWidth, 120,"#000000");
-    controlBackground.pos(0, stageHeight - 120);
+    if(controlBackground != null)
+        Laya.stage.removeChild(controlBackground);
+    controlBackground = new Sprite();
+    controlBackground.graphics.drawRect(0,0,stageWidth, stageHeight / 5,"#000000");
     Laya.stage.addChild(controlBackground);
-    dPadCenterXLeft = Laya.stage.width / 4;
-    dPadCenterXRight = Laya.stage.width / 4 * 3;
-	dPadCenterY = 30;
-
+    controlBackground.pos(0, stageHeight *4 / 5);    
+    dPadCenterXLeft = stageWidth / 4;
+    dPadCenterXRight = stageWidth / 4 * 3;
     var btnSize = 60;
+    
+	dPadCenterY = stageHeight / 10 - btnSize / 2;
+
     var skins = ["res/upBtn.png", "res/leftBtn.png", "res/downBtn.png",
 			    "res/rightBtn.png"];
     var btnLocation = [{x:dPadCenterXRight - btnSize, y: dPadCenterY},
@@ -116,8 +151,8 @@ function onUIAssetsLoaded(){
         controlBackground.addChild(btn);
 		var x = btnLocation[i].x;
 		var y = btnLocation[i].y;
-        console.log(x);
-        console.log(y);
+        //console.log(x);
+        //console.log(y);
                         
 		btn.pos(x, y);
 	}
@@ -180,8 +215,8 @@ function downBtnHandler(e)
 	{
 		case Event.MOUSE_DOWN:
             activeTrigger = true;
-            console.log({playerX:player.body.position.x,playerY:player.body.position.y});
-            console.log({worldX:gameWorld.x,worldY:gameWorld.y});                          
+            //console.log({playerX:player.body.position.x,playerY:player.body.position.y});
+            //console.log({worldX:gameWorld.x,worldY:gameWorld.y});                          
 			break;
 		case Event.MOUSE_UP:
              activeTrigger = false;

@@ -55,7 +55,7 @@ function setup()
                 var data = JSON.parse(text);
                 for(i = 0; i < 25; i++){
                     map[i] = data["map"][i];
-                    console.log(map[i]);
+                    //console.log(map[i]);
                 }
         		initWorld();        
             });
@@ -112,12 +112,12 @@ function setup()
               else{ 
                   if(map[i][j] == '2'){
                     player = new Player(40*j, 40*i);
-                    console.log("player created");
+                    //console.log("player created");
                   }
                   else if(map[i][j] == '3'){
                     enemyList.push(new Enemy(40*j, 40*i));
 		            Matter.World.add(engine.world, enemyList[enemyList.length - 1].body);                    
-                    console.log("enemy created");
+                    //console.log("enemy created");
                   }
                   terrainMap[i][j] = null;
               }
@@ -161,7 +161,7 @@ function setup()
     }
 
     function onLoop(){
-        if(isGameOver == false){
+        if(true){
             cameraTracking();
             //collisionDetection();
             checkPlayer();
@@ -169,10 +169,14 @@ function setup()
     }
 
     function iniCameraTracking(){
+        if(cameraTrackingBlock != null)
+            gameWorld.removeChild(cameraTrackingBlock);
         cameraTrackingBlock = new Sprite();
         cameraTrackingBlock.size(1000 - stageWidth, 1000 - stageHeight *3 / 4);
         gameWorld.addChild(cameraTrackingBlock);
         cameraTrackingBlock.pos(stageWidth/2, stageHeight/2);
+        preX = stageWidth/2;
+        preY = stageHeight/2;
     }
 
     function cameraTracking(){
@@ -185,8 +189,8 @@ function setup()
             
         if(worldTranslationY > 0)
             worldTranslationY = 0;
-        else if(worldTranslationY + gameWorld.height < stageHeight - 120)
-            worldTranslationY = (stageHeight-120) - gameWorld.height;
+        else if(worldTranslationY + gameWorld.height < stageHeight * 4 /5)
+            worldTranslationY = (stageHeight *4 /5) - gameWorld.height;
           
         if((player.body.position.x + player.width >= cameraTrackingBlock.x 
             && player.body.position.x  < cameraTrackingBlock.x + cameraTrackingBlock.width))
