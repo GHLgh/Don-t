@@ -19,7 +19,7 @@ class EventTrigger{
         this.eventType = type;
  
         // TODO: hard coded x, y location, will change later
-        this.body = Browser.window.Matter.Bodies.rectangle(initX, initY, triggerWidth, triggerHeight, {
+        this.body = Browser.window.Matter.Bodies.rectangle(initX+this.width/2, initY+this.height/2, triggerWidth, triggerHeight, {
 				    isStatic: true,
                     isSensor: true,
                     collisionFilter:
@@ -31,10 +31,6 @@ class EventTrigger{
 				    render:
 				    {
                         visible: false,
-					    sprite:
-                        {
-                            //texture: "./res/terrainBlockTemp.png"
-                        }
 				    }
 			    });
                 console.log("event created");
@@ -46,7 +42,7 @@ class EventTrigger{
     collision(collidedBody, activeTrigger){
         if(this.needActive == true && activeTrigger == false)
             ;//Matter.Events.on(this.body, "collisionActive", collision(null, activeTrigger))
-        else{
+        else if(this.linkObject != null){
             switch (this.eventType){
                 case "terrain":
                     Browser.window.Matter.Body.setDensity(this.linkObject.body, 1);

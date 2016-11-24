@@ -13,18 +13,19 @@ var terrainCategory = 0x0100;
 var terrainMask = 0xefff;
 
 class TerrainBlock{
-    constructor(initX, initY){
+    constructor(initX, initY, continueBlock){
         // hp may be used later for creating hidden path
         // but for now the reduce of hp will not be implemented and disable function for TerrainBlock
         // will only be called when a new stage is generating
         this.hp = 50;
 
         // use to construct hitting box with this.x and this.y
-        this.width = 40 * pixelRatio;
+        this.width = 40 * pixelRatio * continueBlock;
         this.height = 40 * pixelRatio;
  
+        console.log({xpos:initX, ypos:initY, width:40 * pixelRatio * continueBlock, height:40 * pixelRatio});
         // TODO: hard coded x, y location, will change later
-        this.body = Browser.window.Matter.Bodies.rectangle(initX, initY, 40 * pixelRatio, 40 * pixelRatio, {
+        this.body = Browser.window.Matter.Bodies.rectangle(initX+this.width/2, initY+this.height/2, this.width, this.height, {
 				    isStatic: true,
                     collisionFilter:
                 {
@@ -36,9 +37,13 @@ class TerrainBlock{
 				    {
 					    sprite:
                         {
-                            texture: "./res/terrainBlockTemp.png",
-                        xScale: pixelRatio,
-                        yScale: pixelRatio,
+                            texture: "res/terrainBlockStrip.png",
+                            xScale: pixelRatio,
+                            yScale: pixelRatio,
+                            xOffset: this.width/2,
+                            yOffset: this.height/2,
+                            objectWidth: 40 * continueBlock,
+                            objectHeight: 40,
                         }
 				    }
 			    });

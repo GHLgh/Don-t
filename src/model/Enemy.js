@@ -29,7 +29,7 @@ class Enemy{
         this.width = 40 * pixelRatio;
         this.height = 40 * pixelRatio;
 
-        this.body = Browser.window.Matter.Bodies.polygon(initX, initY, 8, 20 * pixelRatio, {
+        this.body = Browser.window.Matter.Bodies.polygon(initX+this.width/2, initY+this.height/2, 8, 20 * pixelRatio, {
 				density: 1,
                 collisionFilter:
                 {
@@ -41,9 +41,13 @@ class Enemy{
 				{
 					sprite:
 					{
-						texture: './res/-15.png',
+						texture: 'res/-15.png',
                         xScale: pixelRatio,
                         yScale: pixelRatio,
+                        xOffset: this.width/2,
+                        yOffset: this.height/2,
+                        objectWidth: 40,
+                        objectHeight: 40,
 					}
 				}
 			});

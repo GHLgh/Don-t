@@ -1,3 +1,5 @@
+//TODO: figure out what to do with terrainMap
+
 const defaultMass = 1000;
 
 var isGameOver = false;
@@ -42,6 +44,8 @@ var initiativeEventList = [];
 var passiveEventList = [];
 
 var player = null;
+
+var engine;
 var gameWorld = null;
 var cameraTrackingBlock = null;
 
@@ -102,16 +106,35 @@ function setup()
 	function initWorld()
 	{
         // initialize camera tracking
-        iniCameraTracking();                    
+        iniCameraTracking();
+                         
         for(i = 0; i < 25; i++){
+            var continueTerrain = 0;
+            var terrainX = 0;
+            var terrainY = 0;   
             terrainMap.push(new Array(25));
-            for(j = 0; j < 25; j++)
-              if(map[i][j] == '1'){
-                var terrainBlock = new TerrainBlock(j*40 * pixelRatio, i*40 * pixelRatio);
-                Matter.World.add(engine.world, terrainBlock.body);
-                terrainMap[i][j] = terrainBlock;
-              }
-              else{ 
+            for(j = 0; j < 25; j++){
+                if(map[i][j] == '1'){
+                    if(continueTerrain == 0){
+                        terrainX = j;
+                        terrainY = i;
+                    }
+                    continueTerrain++;
+                    if(j == 24){
+                        var terrainBlock = new TerrainBlock(terrainX *40 * pixelRatio, terrainY*40 * pixelRatio, continueTerrain);
+                        Matter.World.add(engine.world, terrainBlock.body);
+                        console.log({x:terrainX, y:terrainY, count: continueTerrain});
+                        continueTerrain = 0;
+                    }
+                    terrainMap[i][j] = null;
+                }
+                else{
+                  if(continueTerrain != 0){
+                      var terrainBlock = new TerrainBlock(terrainX*40 * pixelRatio, terrainY*40 * pixelRatio, continueTerrain);
+                        Matter.World.add(engine.world, terrainBlock.body);
+                        console.log({x:terrainX, y:terrainY, count: continueTerrain});                        
+                        continueTerrain = 0;
+                  }
                   if(map[i][j] == '2'){
                     player = new Player(40*j * pixelRatio, 40*i * pixelRatio);
                     //console.log("player created");
@@ -122,16 +145,17 @@ function setup()
                     //console.log("enemy created");
                   }
                   terrainMap[i][j] = null;
-              }
+                }
+            }
         }
         
         var exampleEvent = new EventTrigger(40*5 * pixelRatio, 40*5 * pixelRatio, 40 * pixelRatio, 40 * pixelRatio, terrainMap[6][6], "terrain", false);
         initiativeEventList.push(exampleEvent);
-        Matter.World.add(engine.world, exampleEvent.body);
+        //Matter.World.add(engine.world, exampleEvent.body);
 
         var exampleEvent = new EventTrigger(40*3 * pixelRatio, 40*5 * pixelRatio, 40 * pixelRatio, 40 * pixelRatio, terrainMap[6][2], "terrain", true);
         passiveEventList.push(exampleEvent);
-        Matter.World.add(engine.world, exampleEvent.body);
+        //Matter.World.add(engine.world, exampleEvent.body);
 
         if(player != null)
 		    Matter.World.add(engine.world, player.body);      

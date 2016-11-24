@@ -212,8 +212,22 @@ var LayaRender = {};
             // initialize body sprite if not existing
             if (!sp)
             {
+                //var bgTexture = Laya.loader.getRes(spInfo.texture);
+                
                 sp = body.sprite = createBodySprite(spInfo.xOffset, spInfo.yOffset);
-                sp.loadImage(spInfo.texture);
+                if(spInfo.objectHeight && spInfo.objectWidth){
+                    var tex=Laya.loader.getRes(spInfo.texture);
+			        if (tex)onloaded(tex);
+			        else Laya.loader.load(url,Handler.create(this,onloaded),null,/*laya.net.Loader.IMAGE*/"image");
+			        function onloaded (tex){
+				        if (tex){
+					        sp.graphics.drawTexture(laya.resource.Texture.createFromTexture(tex,0,0,spInfo.objectWidth, spInfo.objectHeight),0,0);
+				        }
+			        }
+                }
+                else
+                    sp.loadImage(spInfo.texture);
+                //sp.graphics.drawTexture(laya.resource.Texture.createFromTexture(bgTexture,0,0,spInfo.objectWidth, spInfo.objectHeight));
             }
 
             sp.scale(spInfo.xScale, spInfo.yScale);

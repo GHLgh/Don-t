@@ -1,8 +1,5 @@
-//TODO: terrainBlock sprite?
-
-
  /**
- * This is not a controller, having some codes for testing purpose
+ * This is the entry of the application
  */
 var Sprite  = Laya.Sprite;
 var Stage   = Laya.Stage;
@@ -11,20 +8,17 @@ var Button  = Laya.Button;
 var Handler = Laya.Handler;
 var Event   = Laya.Event;
 var Text    = laya.display.Text;
+var Matter  = Browser.window.Matter;
+var LayaRender = Browser.window.LayaRender;
 
 const pixelRatio = Browser.pixelRatio;
 var stageWidth = Browser.window.innerWidth * pixelRatio;
 var stageHeight = Browser.window.innerHeight * pixelRatio;
 
-var Matter  = Browser.window.Matter;
-var LayaRender = Browser.window.LayaRender;
-
-var engine;
-
 //laya初始化
 Laya.init(stageWidth, stageHeight, Laya.WebGL);
 //FPS
-//Laya.Stat.show(0,0);
+Laya.Stat.show(0,0);
 //设置适配模式
 Laya.stage.scaleMode = "full";
 //设置剧中对齐
@@ -42,14 +36,13 @@ Laya.stage.addChild(loading);
 
 //加载图片
 Laya.loader.load(["res/upBtn.png", "res/rightBtn.png", "res/leftBtn.png",
-			"res/downBtn.png", "res/simpleBtn.png",
-            "res/15.png", "res/-15.png","res/background.png","res/floor.png"], 
+			"res/downBtn.png", "res/simpleBtn.png","res/terrainBlockStrip.png",
+            "res/15.png", "res/-15.png","res/floor.png"], 
             laya.utils.Handler.create(this, onLoaded), laya.utils.Handler.create(this, onLoading, null, false));
  
 //加载进度
 function onLoading(progress){
     loading.progress(progress);
-    //console.log("onLoading: " + progress);
 }
 
 //加载完毕
