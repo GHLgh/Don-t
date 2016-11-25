@@ -40,8 +40,8 @@ class TerrainBlock{
                             texture: "res/terrainBlockStrip.png",
                             xScale: pixelRatio,
                             yScale: pixelRatio,
-                            xOffset: this.width/2,
-                            yOffset: this.height/2,
+                            xOffset: (this.width/2)/pixelRatio,
+                            yOffset: (this.height/2)/pixelRatio,
                             objectWidth: 40 * continueBlock,
                             objectHeight: 40,
                         }
